@@ -5,8 +5,8 @@ built to learn how type systems and transpilers actually work under the hood.
 
 ## Why
 
-In my Fundamentals of Computation course, we covered formal grammars, automata, and how languages can be defined and processed at a basic level. 
-I wanted to see those ideas applied in a real, working system rather than just on paper — so I built Glint, a typed subset of JavaScript that compiles to plain JS.
+In my Fundamentals of Computation module, we covered formal grammars, automata, and how languages can be defined and processed at a basic
+level.I wanted to see those ideas applied in a real, working system rather than just on paper — so I built Glint, a typed subset of JavaScript that compiles to plain JS.
 Writing the lexer and parser meant applying grammar and automata concepts directly, and building the type checker let me explore how a language enforces
 rules beyond just syntax.
 
