@@ -27,14 +27,13 @@ export function tokenize(input: string) : Token[] {
 
     while (currentPosition < input.length){
         //TODO : match token here
-        const currentToken = input[currentPosition]
+        const currentToken = input[currentPosition]!
 
         if (currentToken === ' '){
         currentPosition ++
         col ++
         continue
     }
-
         if (currentToken === '\t'){
             currentPosition ++
             col = col + 4
@@ -44,6 +43,24 @@ export function tokenize(input: string) : Token[] {
             line++
             col = 1
             currentPosition ++
+            continue
+        }
+
+        const punctuation_set = new Set<string>(['(', ')', '{', '}', ',' , ';']);
+        if (punctuation_set.has(currentToken)){
+            const newToken2 = new Token("PUNCTUATION", currentToken, line, col);
+            out.push(newToken2);
+            currentPosition ++
+            col++
+            continue
+        }
+
+        const operator_set = new Set<string>(['+', '-', '*', '/']);
+        if (operator_set.has(currentToken)){
+            const newToken3 = new Token("OPERATOR", currentToken,line, col);
+            out.push(newToken3);
+            currentPosition++
+            col++
             continue
         }
     }

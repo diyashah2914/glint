@@ -15,5 +15,22 @@ describe('sanity check', () => {
     expect(result.length).toBe(1)
     expect(result[0]?.col).toBe(13);
   })
+  it('punctuation matching', () => {
+    const result = tokenize("({,;})");
+    expect(result.length).toBe(7);
+    expect(result[0]?.col).toBe(1);
+    for (let i: number = 0; i < 6; i++){
+      expect(result[i]?.type).toBe("PUNCTUATION");
+    }
+  })
+  it('operator matching', () => {
+    const result = tokenize(" - / * + ");
+    expect(result.length).toBe(5);
+    expect(result[0]?.col).toBe(2);
+    for(let j: number = 0; j < 4; j++){
+      expect(result[j]?.type).toBe("OPERATOR")
+    }
+    
+  })
 });
 
