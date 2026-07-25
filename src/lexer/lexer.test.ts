@@ -10,5 +10,10 @@ describe('sanity check', () => {
     expect(result.length).toBe(1);
     expect(result[0]?.type).toBe("EOF")
   })
+  it('skip whitespace', () => {
+    const result = tokenize("\t\t\t");
+    expect(result.length).toBe(1)
+    expect(result[0]?.col).toBe(13);
+  })
 });
 

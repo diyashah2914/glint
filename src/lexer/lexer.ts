@@ -28,12 +28,22 @@ export function tokenize(input: string) : Token[] {
     while (currentPosition < input.length){
         //TODO : match token here
         const currentToken = input[currentPosition]
+
+        if (currentToken === ' '){
         currentPosition ++
         col ++
+        continue
+    }
 
+        if (currentToken === '\t'){
+            currentPosition ++
+            col = col + 4
+            continue
+        }
         if (currentToken === '\n'){
             line++
             col = 1
+            currentPosition ++
             continue
         }
     }
