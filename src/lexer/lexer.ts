@@ -18,3 +18,27 @@ class Token {
 
     }
 }
+
+export function tokenize(input: string) : Token[] {
+    const out: Token[] = []
+    let currentPosition = 0
+    let line = 1
+    let col = 1
+
+    while (currentPosition < input.length){
+        //TODO : match token here
+        const currentToken = input[currentPosition]
+        currentPosition ++
+        col ++
+
+        if (currentToken === '\n'){
+            line++
+            col = 1
+            continue
+        }
+    }
+
+    const newToken = new Token("EOF", null, line, col )
+    out.push(newToken);
+    return out
+}
