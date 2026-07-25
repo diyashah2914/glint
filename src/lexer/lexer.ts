@@ -1,6 +1,6 @@
 
 //Define TokenType union
-type TokenType = "KEYWORD" | "IDENTIFIER" | "OPERATOR" | "PUNCTUATION" | "NUMBER" | "STRING" | "BOOLEAN" | "EOF";
+type TokenType = "KEYWORD" | "IDENTIFIER" | "OPERATOR" | "COMPARISON" | "PUNCTUATION" | "NUMBER" | "STRING" | "BOOLEAN" | "EOF";
 
 // Define Token Type
 class Token {
@@ -61,6 +61,29 @@ export function tokenize(input: string) : Token[] {
             out.push(newToken3);
             currentPosition++
             col++
+            continue
+        }
+
+        if (currentToken === '='){
+            let nextToken = input[currentPosition+1]
+            if (nextToken === '='){
+                const newToken4 = new Token("COMPARISON", '==' , line, col);
+                out.push(newToken4)
+
+                currentPosition = currentPosition + 2
+                col = col + 2
+
+                
+            }
+            else{
+                const newToken4 = new Token("OPERATOR", currentToken, line, col);
+                out.push(newToken4);
+
+                currentPosition ++
+                col ++
+                
+            }
+
             continue
         }
     }

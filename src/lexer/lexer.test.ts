@@ -32,5 +32,14 @@ describe('sanity check', () => {
     }
     
   })
+
+  it ('match = vs ==', () => {
+    const result = tokenize('== =')
+    expect(result.length).toBe(3);
+    expect(result[1]?.col).toBe(4);
+    expect(result[0]?.type).toBe("COMPARISON");
+    expect(result[1]?.type).toBe("OPERATOR");
+
+  })
 });
 
