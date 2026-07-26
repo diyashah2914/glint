@@ -51,7 +51,7 @@ describe('sanity check', () => {
     expect(() => tokenize("!")).toThrow()
    })
   
-   it ('match <> with <=>=', () => {
+  it ('match <> with <=>=', () => {
     const result = tokenize('< >=');
     expect(result[0]?.value).toBe('<');
     expect(result[1]?.value).toBe('>=');
@@ -59,5 +59,14 @@ describe('sanity check', () => {
       expect(result[i]?.type).toBe("COMPARISON");
     }
    })
+
+  it ('Number literal Matching', () => {
+    const result = tokenize('123=');
+    expect(result.length).toBe(3);
+    expect(result[0]?.col).toBe(1);
+    expect(result[1]?.col).toBe(4);
+    expect(result[0]?.type).toBe("NUMBER");
+  })
+  
 });
 

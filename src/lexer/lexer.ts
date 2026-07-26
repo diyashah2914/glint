@@ -25,6 +25,10 @@ export function tokenize(input: string) : Token[] {
     let line = 1
     let col = 1
 
+    const punctuationSet = new Set<string>(['(', ')', '{', '}', ',' , ';']);
+    const operatorSet = new Set<string>(['+', '-', '*', '/']);
+    const digitRegex : RegExp = /\d/;
+
     while (currentPosition < input.length){
         //TODO : match token here
         const currentToken = input[currentPosition]!
@@ -46,8 +50,8 @@ export function tokenize(input: string) : Token[] {
             continue
         }
 
-        const punctuation_set = new Set<string>(['(', ')', '{', '}', ',' , ';']);
-        if (punctuation_set.has(currentToken)){
+        
+        if (punctuationSet.has(currentToken)){
             const newToken = new Token("PUNCTUATION", currentToken, line, col);
             out.push(newToken);
             currentPosition ++
@@ -55,8 +59,8 @@ export function tokenize(input: string) : Token[] {
             continue
         }
 
-        const operator_set = new Set<string>(['+', '-', '*', '/']);
-        if (operator_set.has(currentToken)){
+        
+        if (operatorSet.has(currentToken)){
             const newToken = new Token("OPERATOR", currentToken,line, col);
             out.push(newToken);
             currentPosition++
@@ -114,6 +118,22 @@ export function tokenize(input: string) : Token[] {
                 continue
             }
         }
+
+        if(digitRegex.test(currentToken)){
+            let numString = '';
+            const startCol = col;
+            while (currentPosition < input.length && digitRegex.test(input[currentPosition]!)){
+                numString += input[currentPosition]!;
+                currentPosition ++;
+                col ++;
+            }
+
+            const newToken = new Token("NUMBER", numString, line, startCol);
+            out.push(newToken);
+            continue
+        }
+        
+        throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
     }
 
     const newToken = new Token("EOF", null, line, col )
