@@ -48,8 +48,8 @@ export function tokenize(input: string) : Token[] {
 
         const punctuation_set = new Set<string>(['(', ')', '{', '}', ',' , ';']);
         if (punctuation_set.has(currentToken)){
-            const newToken2 = new Token("PUNCTUATION", currentToken, line, col);
-            out.push(newToken2);
+            const newToken = new Token("PUNCTUATION", currentToken, line, col);
+            out.push(newToken);
             currentPosition ++
             col++
             continue
@@ -57,8 +57,8 @@ export function tokenize(input: string) : Token[] {
 
         const operator_set = new Set<string>(['+', '-', '*', '/']);
         if (operator_set.has(currentToken)){
-            const newToken3 = new Token("OPERATOR", currentToken,line, col);
-            out.push(newToken3);
+            const newToken = new Token("OPERATOR", currentToken,line, col);
+            out.push(newToken);
             currentPosition++
             col++
             continue
@@ -67,8 +67,8 @@ export function tokenize(input: string) : Token[] {
         if (currentToken === '='){
             let nextToken = input[currentPosition+1]
             if (nextToken === '='){
-                const newToken4 = new Token("COMPARISON", '==' , line, col);
-                out.push(newToken4)
+                const newToken = new Token("COMPARISON", '==' , line, col);
+                out.push(newToken)
 
                 currentPosition = currentPosition + 2
                 col = col + 2
@@ -76,15 +76,25 @@ export function tokenize(input: string) : Token[] {
                 
             }
             else{
-                const newToken4 = new Token("OPERATOR", currentToken, line, col);
-                out.push(newToken4);
-
-                currentPosition ++
-                col ++
-                
+                const newToken = new Token("OPERATOR", currentToken, line, col);
+                out.push(newToken);
+                currentPosition ++;
+                col ++;
             }
+                continue
+        }
 
-            continue
+        if (currentToken === '!'){
+            let nextToken = input[currentPosition + 1]
+            if (nextToken === '='){
+                const newToken = new Token("COMPARISON", '!=', line,col);
+                out.push(newToken);
+                currentPosition = currentPosition+2;
+                col = col + 2;
+                continue
+            } else {
+                throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
+            }
         }
     }
 

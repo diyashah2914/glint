@@ -39,7 +39,16 @@ describe('sanity check', () => {
     expect(result[1]?.col).toBe(4);
     expect(result[0]?.type).toBe("COMPARISON");
     expect(result[1]?.type).toBe("OPERATOR");
-
   })
+   it('match ! vs !=', () => {
+    const result = tokenize('!=')
+    expect(result.length).toBe(2);
+    expect(result[0]?.col).toBe(1);
+    expect(result[0]?.type).toBe("COMPARISON");
+   })
+
+   it ('shows error for !', () => {
+    expect(() => tokenize("!")).toThrow()
+   })
 });
 
