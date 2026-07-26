@@ -67,6 +67,17 @@ describe('sanity check', () => {
     expect(result[1]?.col).toBe(4);
     expect(result[0]?.type).toBe("NUMBER");
   })
+
+  it ('String literal Matching', () => {
+    const result = tokenize('"abc"');
+    expect(result.length).toBe(2);
+    expect(result[0]?.col).toBe(1);
+    expect(result[0]?.type).toBe("STRING");
+  })
+
+  it ('String literal error', () => {
+    expect(() =>  tokenize('"abc')).toThrow();
+  })
   
 });
 

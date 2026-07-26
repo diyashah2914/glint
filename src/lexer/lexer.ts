@@ -68,6 +68,8 @@ export function tokenize(input: string) : Token[] {
             continue
         }
 
+
+        //Match = vs. ==
         if (currentToken === '='){
             let nextToken = input[currentPosition+1]
             if (nextToken === '='){
@@ -88,6 +90,8 @@ export function tokenize(input: string) : Token[] {
                 continue
         }
 
+        
+        //Match ! vs. !=
         if (currentToken === '!'){
             let nextToken = input[currentPosition + 1]
             if (nextToken === '='){
@@ -101,6 +105,7 @@ export function tokenize(input: string) : Token[] {
             }
         }
         
+        //Match < , > vs. <= , >=
         if (currentToken === '<' || currentToken === '>'){
             let nextToken = input[currentPosition + 1]
             if (nextToken === '='){
@@ -118,7 +123,8 @@ export function tokenize(input: string) : Token[] {
                 continue
             }
         }
-
+        
+        //Match number literals
         if(digitRegex.test(currentToken)){
             let numString = '';
             const startCol = col;
@@ -131,6 +137,29 @@ export function tokenize(input: string) : Token[] {
             const newToken = new Token("NUMBER", numString, line, startCol);
             out.push(newToken);
             continue
+        }
+
+        //Match String literal
+        if (currentToken === '"'){
+            let charString = '';
+            let startCol = col;
+            currentPosition++;
+            col++;
+            while(currentPosition < input.length && input[currentPosition] !== '"'){
+                charString += input[currentPosition]!;
+                currentPosition++ ;
+                col++;
+            }
+            if (currentPosition === input.length){
+                throw new Error(` Unterminated String literal starting at line ${line}, column ${col} `);
+            } else {
+                const newToken = new Token("STRING", charString, line, startCol);
+                out.push(newToken);
+                currentPosition++;
+                col++;
+                continue
+            }
+
         }
         
         throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
