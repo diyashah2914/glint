@@ -40,15 +40,24 @@ describe('sanity check', () => {
     expect(result[0]?.type).toBe("COMPARISON");
     expect(result[1]?.type).toBe("OPERATOR");
   })
-   it('match ! vs !=', () => {
+  it('match ! vs !=', () => {
     const result = tokenize('!=')
     expect(result.length).toBe(2);
     expect(result[0]?.col).toBe(1);
     expect(result[0]?.type).toBe("COMPARISON");
    })
 
-   it ('shows error for !', () => {
+  it ('shows error for !', () => {
     expect(() => tokenize("!")).toThrow()
+   })
+  
+   it ('match <> with <=>=', () => {
+    const result = tokenize('< >=');
+    expect(result[0]?.value).toBe('<');
+    expect(result[1]?.value).toBe('>=');
+    for (let i : number = 0; i<2;i++){
+      expect(result[i]?.type).toBe("COMPARISON");
+    }
    })
 });
 

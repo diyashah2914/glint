@@ -96,6 +96,24 @@ export function tokenize(input: string) : Token[] {
                 throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
             }
         }
+        
+        if (currentToken === '<' || currentToken === '>'){
+            let nextToken = input[currentPosition + 1]
+            if (nextToken === '='){
+                const newToken = new Token("COMPARISON", currentToken+nextToken, line,col);
+                out.push(newToken);
+                currentPosition = currentPosition+2;
+                col = col + 2;
+                continue
+            }
+            else{
+                const newToken = new Token("COMPARISON", currentToken, line, col);
+                out.push(newToken);
+                currentPosition ++;
+                col ++;
+                continue
+            }
+        }
     }
 
     const newToken = new Token("EOF", null, line, col )
