@@ -28,6 +28,9 @@ export function tokenize(input: string) : Token[] {
     const punctuationSet = new Set<string>(['(', ')', '{', '}', ',' , ';']);
     const operatorSet = new Set<string>(['+', '-', '*', '/']);
     const digitRegex : RegExp = /\d/;
+    const alphabetRegex : RegExp = /[A-Za-z]/;
+    const varRegex : RegExp = /\w/;
+    const keywordsSet = new Set<string>(['let', 'number', 'string', 'boolean', 'if', 'else', 'while', 'function', 'return']);
 
     while (currentPosition < input.length){
         //TODO : match token here
@@ -160,6 +163,37 @@ export function tokenize(input: string) : Token[] {
                 continue
             }
 
+        }
+
+        if (alphabetRegex.test(currentToken)){
+            let varString = currentToken;
+            let startCol = col;
+            currentPosition ++
+            col ++;
+            while(currentPosition < input.length && varRegex.test(input[currentPosition]!)){
+                varString += input[currentPosition]!;
+                currentPosition++
+                col++
+
+            }
+
+        if (varString === 'true' || varString === 'false' ){
+            const newToken = new Token("BOOLEAN", varString, line, startCol);
+            out.push(newToken);
+            continue
+        }
+        else if (keywordsSet.has(varString)){
+            const newToken = new Token('KEYWORD', varString, line, startCol);
+            out.push(newToken);
+            continue
+        }
+
+        else{
+            const newToken = new Token("IDENTIFIER", varString, line, startCol);
+            out.push(newToken);
+            continue
+        }
+        
         }
         
         throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);

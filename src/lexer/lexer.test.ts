@@ -78,6 +78,24 @@ describe('sanity check', () => {
   it ('String literal error', () => {
     expect(() =>  tokenize('"abc')).toThrow();
   })
+
+  it ('match identifier', () => {
+    const result = tokenize("age");
+    expect(result[0]?.type).toBe("IDENTIFIER");
+    expect(result[0]?.value).toBe("age");
+  })
+
+  it ('match keyword', () => {
+    const result = tokenize("let");
+    expect(result[0]?.type).toBe("KEYWORD");
+    expect(result[0]?.value).toBe("let");
+  })
+
+  it('match boolean', () => {
+    const result = tokenize("true");
+    expect(result[0]?.type).toBe("BOOLEAN");
+    expect(result[0]?.value).toBe("true");
+  })
   
 });
 
