@@ -41,12 +41,12 @@ export function tokenize(input: string) : Token[] {
         col ++
         continue
     }
-        if (currentToken === '\t'){
+        else if (currentToken === '\t'){
             currentPosition ++
             col = col + 4
             continue
         }
-        if (currentToken === '\n'){
+        else if (currentToken === '\n'){
             line++
             col = 1
             currentPosition ++
@@ -54,7 +54,7 @@ export function tokenize(input: string) : Token[] {
         }
 
         
-        if (punctuationSet.has(currentToken)){
+        else if (punctuationSet.has(currentToken)){
             const newToken = new Token("PUNCTUATION", currentToken, line, col);
             out.push(newToken);
             currentPosition ++
@@ -63,7 +63,7 @@ export function tokenize(input: string) : Token[] {
         }
 
         
-        if (operatorSet.has(currentToken)){
+        else if (operatorSet.has(currentToken)){
             const newToken = new Token("OPERATOR", currentToken,line, col);
             out.push(newToken);
             currentPosition++
@@ -73,7 +73,7 @@ export function tokenize(input: string) : Token[] {
 
 
         //Match = vs. ==
-        if (currentToken === '='){
+        else if (currentToken === '='){
             let nextToken = input[currentPosition+1]
             if (nextToken === '='){
                 const newToken = new Token("COMPARISON", '==' , line, col);
@@ -95,7 +95,7 @@ export function tokenize(input: string) : Token[] {
 
         
         //Match ! vs. !=
-        if (currentToken === '!'){
+        else if (currentToken === '!'){
             let nextToken = input[currentPosition + 1]
             if (nextToken === '='){
                 const newToken = new Token("COMPARISON", '!=', line,col);
@@ -109,7 +109,7 @@ export function tokenize(input: string) : Token[] {
         }
         
         //Match < , > vs. <= , >=
-        if (currentToken === '<' || currentToken === '>'){
+        else if (currentToken === '<' || currentToken === '>'){
             let nextToken = input[currentPosition + 1]
             if (nextToken === '='){
                 const newToken = new Token("COMPARISON", currentToken+nextToken, line,col);
@@ -128,7 +128,7 @@ export function tokenize(input: string) : Token[] {
         }
         
         //Match number literals
-        if(digitRegex.test(currentToken)){
+        else if(digitRegex.test(currentToken)){
             let numString = '';
             const startCol = col;
             while (currentPosition < input.length && digitRegex.test(input[currentPosition]!)){
@@ -143,7 +143,7 @@ export function tokenize(input: string) : Token[] {
         }
 
         //Match String literal
-        if (currentToken === '"'){
+        else if (currentToken === '"'){
             let charString = '';
             let startCol = col;
             currentPosition++;
@@ -165,7 +165,7 @@ export function tokenize(input: string) : Token[] {
 
         }
 
-        if (alphabetRegex.test(currentToken)){
+        else if (alphabetRegex.test(currentToken)){
             let varString = currentToken;
             let startCol = col;
             currentPosition ++
@@ -177,26 +177,27 @@ export function tokenize(input: string) : Token[] {
 
             }
 
-        if (varString === 'true' || varString === 'false' ){
-            const newToken = new Token("BOOLEAN", varString, line, startCol);
-            out.push(newToken);
-            continue
-        }
-        else if (keywordsSet.has(varString)){
-            const newToken = new Token('KEYWORD', varString, line, startCol);
-            out.push(newToken);
-            continue
-        }
+            if (varString === 'true' || varString === 'false' ){
+                const newToken = new Token("BOOLEAN", varString, line, startCol);
+                out.push(newToken);
+                continue
+            }
+            else if (keywordsSet.has(varString)){
+                const newToken = new Token('KEYWORD', varString, line, startCol);
+                out.push(newToken);
+                continue
+            }
 
+            else{
+                const newToken = new Token("IDENTIFIER", varString, line, startCol);
+                out.push(newToken);
+                continue
+            }
+        
+        }
         else{
-            const newToken = new Token("IDENTIFIER", varString, line, startCol);
-            out.push(newToken);
-            continue
+            throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
         }
-        
-        }
-        
-        throw new Error(`Unexpected character '${currentToken}' at line ${line}, column ${col}`);
     }
 
     const newToken = new Token("EOF", null, line, col )

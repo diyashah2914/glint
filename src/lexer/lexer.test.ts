@@ -97,5 +97,8 @@ describe('sanity check', () => {
     expect(result[0]?.value).toBe("true");
   })
   
+  it ('unexpected character error', () => {
+    expect(() => tokenize("@")).toThrow();
+  } )
 });
 
