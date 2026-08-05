@@ -2,8 +2,8 @@
 //Define TokenType union
 type TokenType = "KEYWORD" | "IDENTIFIER" | "OPERATOR" | "COMPARISON" | "PUNCTUATION" | "NUMBER" | "STRING" | "BOOLEAN" | "EOF";
 
-// Define Token Type
-class Token {
+// Define Token Typee
+export class Token {
     readonly type : TokenType;
     readonly value : string | null;
     readonly line : number;

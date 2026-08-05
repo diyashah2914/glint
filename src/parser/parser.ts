@@ -1,7 +1,4 @@
-// export function tokenize(source: string){
-//     //TODO : implement
-// }
-
+import {Token} from "../lexer/lexer.js"
 //Expressions AST nodes
 type Expr = NumberLiteral | StringLiteral | BooleanLiteral| Identifier | BinaryExpr| CallExpr;
 interface NumberLiteral {
@@ -21,7 +18,7 @@ interface Identifier {
     name: string;
 }
 interface BinaryExpr {
-    kind : "BinaryExp";
+    kind : "BinaryExpr";
     operator: string  ;
     left: Expr;
     right: Expr;
@@ -43,8 +40,8 @@ interface LetStatement {
 interface IfStatement {
     kind : "IfStatement";
     condition: Expr;
-    iftrue_branch : Statement[];
-    else_branch : Statement[] | null;
+    thenBranch : Statement[];
+    elseBranch : Statement[] | null;
 }
 interface WhileStatement { 
     kind: "WhileStatement";
@@ -53,13 +50,13 @@ interface WhileStatement {
 }
 interface ReturnStatement {
     kind : "ReturnStatement";
-    output: Expr | null;
+    returnType: Expr | null;
 }
 interface FunctionDecl {
     kind : "FunctionDecl";
-    func_name: string;
+    funcName: string;
     params: {name: string, type: string}[];
-    output : string | null;
+    returnType : string | null;
     body : Statement[];
 }
 interface ExprStatement { 
@@ -71,5 +68,11 @@ interface ExprStatement {
 interface Program { 
     kind : "Program";
     body : Statement[]
+}
+
+export function parse(tokens: Token[]) : Program {
+    let pos = 0;
+
+    return {kind : "Program", body: []};
 }
 
