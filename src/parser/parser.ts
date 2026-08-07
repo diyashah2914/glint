@@ -89,9 +89,40 @@ export function parse(tokens: Token[]) : Program {
             return next;
         }
         else {
-            throw new Error(`Unexpected type '${tokens[pos]?.type}' at line '${tokens[pos]?.line}, column '${tokens[pos]?.col}' instead of '${type}' type'`)
+            throw new Error(`Unexpected type '${tokens[pos]?.type}' at line '${tokens[pos]?.line}', column '${tokens[pos]?.col}' instead of '${type}' type'`)
         }
     }
-    return {kind : "Program", body: []};
+
+    function parseLiteral(): Expr {
+        const current = peek();
+
+        if (!current) {
+            throw new Error(`Unexpected end of input`);
+        }
+
+        if (current?.type === "NUMBER"){
+            advance();
+            return {
+                kind: "NumberLiteral",
+                value: Number(current.value)
+            }
+        }   else if (current?.type === "STRING"){
+            advance();
+            return {
+                kind: "StringLiteral",
+                value: current.value ?? ""
+            }
+        }   else if (current?.type === "BOOLEAN"){
+            advance();
+            return {
+                kind: "BooleanLiteral",
+                value: current.value === "true"
+            }
+        } else {
+            throw new Error(`Unexpected literal token: ${current.type}`)
+        }
+    }
+        return { kind: "Program", body: [] };
+
 }
 
