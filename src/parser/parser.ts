@@ -73,6 +73,25 @@ interface Program {
 export function parse(tokens: Token[]) : Program {
     let pos = 0;
 
+    function peek() {
+        return tokens[pos];
+    } 
+
+    function advance() {
+        const current = peek();
+        pos++;
+        return current;
+    }
+
+    function expect(type : string) {
+        if (type === tokens[pos]?.type){
+            const next = advance();
+            return next;
+        }
+        else {
+            throw new Error(`Unexpected type '${tokens[pos]?.type}' at line '${tokens[pos]?.line}, column '${tokens[pos]?.col}' instead of '${type}' type'`)
+        }
+    }
     return {kind : "Program", body: []};
 }
 
