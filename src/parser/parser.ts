@@ -134,7 +134,17 @@ export function parse(tokens: Token[]) : Program {
 
         if (current?.type === "PUNCTUATION" && current?.value === "("){
             advance();
-            // yet to code. need parseExpression() first!
+            const innerExpr = parseExpression();
+            const closingpunc = peek();
+            if (closingpunc?.type === "PUNCTUATION" && closingpunc?.value === ")"){
+                advance();
+                return innerExpr;
+            } else {
+                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ')' `)
+
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('  `)
         }
     }
 
