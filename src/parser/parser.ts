@@ -204,6 +204,22 @@ export function parse(tokens: Token[]) : Program {
         }
         
     }
+
+    function parseExpressionStatement(){
+        const expr = parseExpression();
+        let current = peek();
+
+        if (current?.type === "PUNCTUATION" && current?.value === ";" ) {
+            advance();
+            return {
+                kind: "ExprStatement",
+                expr: expr
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ;`)
+        }
+    }
+
             
         return { kind: "Program", body: [] };
 
