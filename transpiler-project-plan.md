@@ -6,11 +6,11 @@ Goal: working, tested, demoable v1 with a browser playground.
 ---
 
 ## Phase 0 — Setup & Scoping (few days)
-- [ ] Pick your language: TypeScript or Python (recommend TypeScript — dogfooding the ecosystem you're mimicking)
-- [ ] Set up repo: git init, README skeleton, folder structure (`/lexer`, `/parser`, `/checker`, `/codegen`, `/tests`)
-- [ ] Write down your v1 feature list on paper — the exact grammar you'll support (see Phase 2)
-- [ ] Decide your "before/after" demo example for the README (write it now, even if untested — keeps you focused)
-- [ ] Set up a test runner (Jest if TS, pytest if Python) from day one
+- [x] Pick your language: TypeScript or Python (recommend TypeScript — dogfooding the ecosystem you're mimicking)
+- [x] Set up repo: git init, README skeleton, folder structure (`/lexer`, `/parser`, `/checker`, `/codegen`, `/tests`)
+- [x] Write down your v1 feature list on paper — the exact grammar you'll support (see Phase 2)
+- [x] Decide your "before/after" demo example for the README (write it now, even if untested — keeps you focused)
+- [x] Set up a test runner (Jest if TS, pytest if Python) from day one
 
 **Exit criteria:** repo exists, empty pipeline stubbed (`source → tokens → AST → checked AST → JS string`), one dummy test passes.
 
