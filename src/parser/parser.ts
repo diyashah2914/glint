@@ -128,6 +128,34 @@ export function parse(tokens: Token[]) : Program {
             throw new Error(`Unexpected literal token: ${current.type}`)
         }
     }
+
+    function parseParenthesized(){
+        const current = peek();
+
+        if (current?.type === "PUNCTUATION" && current?.value === "("){
+            advance();
+            // yet to code. need parseExpression() first!
+        }
+    }
+
+    function parseExpression() :Expr{
+        const leftNode = parseLiteral();
+        
+        const current = peek();
+        if (current?.type === "OPERATOR" || current?.type === "COMPARISON"){
+            const operatorToken = advance();
+            const rightNode = parseExpression(); 
+
+            return {
+                kind: "BinaryExpr",
+                operator: operatorToken?.value ?? "",
+                left: leftNode,
+                right: rightNode 
+            }
+        }
+        return leftNode;
+    }
+            
         return { kind: "Program", body: [] };
 
 }
