@@ -17,11 +17,11 @@ Goal: working, tested, demoable v1 with a browser playground.
 ---
 
 ## Phase 1 — Lexer (Tokenizer)
-- [ ] Define token types: identifiers, keywords (`let`, `if`, `while`, `function`, `return`), literals (number, string, boolean), operators, punctuation
-- [ ] Handle whitespace/comments (skip, don't tokenize)
-- [ ] Track line/column numbers per token (you'll need this for error messages later — don't skip it)
-- [ ] Write tests: tokenize simple snippets, check exact token sequences
-- [ ] Handle lexer errors (invalid characters) with position info
+- [x] Define token types: identifiers, keywords (`let`, `if`, `while`, `function`, `return`), literals (number, string, boolean), operators, punctuation
+- [x] Handle whitespace/comments (skip, don't tokenize)
+- [x] Track line/column numbers per token (you'll need this for error messages later — don't skip it)
+- [x] Write tests: tokenize simple snippets, check exact token sequences
+- [x] Handle lexer errors (invalid characters) with position info
 
 **Exit criteria:** can tokenize `let x: number = 5;` correctly, tests cover normal + error cases.
 
@@ -43,7 +43,7 @@ v1 grammar to support:
 - Basic objects/object types (stretch goal — do after everything else works)
 
 Tasks:
-- [ ] Define AST node types for each grammar rule
+- [x] Define AST node types for each grammar rule
 - [ ] Implement recursive descent parser, one construct at a time (start with expressions, then statements)
 - [ ] Handle operator precedence (Pratt parsing or precedence climbing for expressions)
 - [ ] Parser error recovery — report line/col, don't just crash on first bad token
