@@ -220,7 +220,42 @@ export function parse(tokens: Token[]) : Program {
         }
     }
 
-            
+    function parseLetStatement(){
+        let current = peek();
+        let typeAnnotation: string | null = null;
+
+        if (current?.value === "let" && current?.type==="KEYWORD"){
+            advance();
+
+            const varNameToken = expect("IDENTIFIER");
+            const varName = varNameToken?.value ?? ""
+            current = peek();
+
+            if (current?.value === ":"){
+                advance();
+                const typeToken = expect("KEYWORD");
+                typeAnnotation = typeToken?.value ?? null;
+            } 
+            expect("OPERATOR");
+            current = peek();
+            const valueExpr = parseExpression();
+            current = peek();
+
+            if (current?.type === "PUNCTUATION" && current?.value === ";"){
+                advance();
+                return{
+                    kind: "LetStatement",
+                    name: varName,
+                    typeAnnotation: typeAnnotation,
+                    value: valueExpr
+                }
+            } else {
+                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ;`)
+            }
+        } else { 
+                    throw new Error(`Expected 'let' keyword`);
+                }
+    }    
         return { kind: "Program", body: [] };
 
 }
