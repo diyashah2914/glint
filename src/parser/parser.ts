@@ -118,6 +118,12 @@ export function parse(tokens: Token[]) : Program {
                 kind: "BooleanLiteral",
                 value: current.value === "true"
             }
+        } else if (current?.type === "IDENTIFIER"){
+            advance();
+            return {
+                kind: "Identifier",
+                name: current.value ?? ""
+            }
         } else {
             throw new Error(`Unexpected literal token: ${current.type}`)
         }
