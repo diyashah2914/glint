@@ -165,6 +165,45 @@ export function parse(tokens: Token[]) : Program {
         }
         return leftNode;
     }
+
+    function parseCall() {
+        let current = peek();
+
+        if (current?.type === "IDENTIFIER"){
+            const funcName = advance()?.value;
+            current = peek();
+            if (current?.type === "PUNCTUATION" && current?.value === "("){
+                advance();
+                current = peek();
+
+                const args: Expr[] = [];
+
+                while (current?.value !== ")") {
+                    args.push(parseExpression());
+
+                    current = peek();
+
+                    if (current?.value === ","){
+                        advance();
+                        current = peek();
+                    }
+                }
+
+                advance();
+                return { 
+                    kind : "CallExpr",
+                    name: funcName,
+                    args: args
+                }
+            
+            } else {
+                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('  `)
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of identifier.`)
+        }
+        
+    }
             
         return { kind: "Program", body: [] };
 
