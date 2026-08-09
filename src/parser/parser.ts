@@ -285,6 +285,26 @@ export function parse(tokens: Token[]) : Program {
             throw new Error (`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of return`);
         }
     }
+
+    function parseBlock(){
+        let current = peek();
+        const statements: Statement[] = [];
+
+        if (current?.value === "{"){
+            advance();
+            current = peek();
+            while (current?.value !=="}"){
+                //yet to code - ongoing parseStatement() function
+                // const stmt = parseStatement();
+                // statements.push(stmt);
+                current = peek();
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '{'`);  
+        } 
+        advance();
+        return statements;
+    } 
         return { kind: "Program", body: [] };
 
 }
