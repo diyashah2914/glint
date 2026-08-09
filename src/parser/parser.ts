@@ -212,7 +212,7 @@ export function parse(tokens: Token[]) : Program {
         if (current?.type === "PUNCTUATION" && current?.value === ";" ) {
             advance();
             return {
-                kind: "ExprStatement",
+                kind: "ExprStatement" as const,
                 expr: expr
             }
         } else {
@@ -244,7 +244,7 @@ export function parse(tokens: Token[]) : Program {
             if (current?.type === "PUNCTUATION" && current?.value === ";"){
                 advance();
                 return{
-                    kind: "LetStatement",
+                    kind: "LetStatement" as const,
                     name: varName,
                     typeAnnotation: typeAnnotation,
                     value: valueExpr
@@ -274,7 +274,7 @@ export function parse(tokens: Token[]) : Program {
             if (current?.type === "PUNCTUATION" && current.value === ";"){
                 advance();
                 return {
-                    kind: "ReturnStatement",
+                    kind: "ReturnStatement" as const,
                     returnType: returnExpr
                 }
             } else {
@@ -294,9 +294,8 @@ export function parse(tokens: Token[]) : Program {
             advance();
             current = peek();
             while (current?.value !=="}"){
-                //yet to code - ongoing parseStatement() function
-                // const stmt = parseStatement();
-                // statements.push(stmt);
+                const stmt = parseStatement();
+                statements.push(stmt);
                 current = peek();
             }
         } else {
@@ -305,6 +304,20 @@ export function parse(tokens: Token[]) : Program {
         advance();
         return statements;
     } 
+
+    function parseStatement(){
+        let current = peek();
+
+        if (current?.type === "KEYWORD" && current?.value === "let"){
+            return parseLetStatement();
+        } else if (current?.type === "KEYWORD" && current?.value === "return"){
+            return parseReturn();
+        } 
+            // yet to add else if blocks for if, while, function decl, etc.'
+        else {
+            return parseExpressionStatement();
+        }
+    }
         return { kind: "Program", body: [] };
 
 }
