@@ -253,9 +253,38 @@ export function parse(tokens: Token[]) : Program {
                 throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ;`)
             }
         } else { 
-                    throw new Error(`Expected 'let' keyword`);
-                }
+            throw new Error(`Expected 'let' keyword`);
+        }
     }    
+
+    function parseReturn(){
+        let current = peek();
+        let returnExpr: Expr | null = null;
+
+        if (current?.type === "KEYWORD" && current?.value === "return"){
+            advance();
+
+            current = peek();
+
+            if (current?.value !== ";"){
+                returnExpr = parseExpression();
+                current = peek();
+            } 
+        
+            if (current?.type === "PUNCTUATION" && current.value === ";"){
+                advance();
+                return {
+                    kind: "ReturnStatement",
+                    returnType: returnExpr
+                }
+            } else {
+                throw new Error (`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} insted of ;`);
+            }
+        
+        } else {
+            throw new Error (`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of return`);
+        }
+    }
         return { kind: "Program", body: [] };
 
 }
