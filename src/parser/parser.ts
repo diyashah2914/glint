@@ -284,7 +284,7 @@ export function parse(tokens: Token[]) : Program {
         } else {
             throw new Error (`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of return`);
         }
-    }
+    } 
 
     function parseBlock(){
         let current = peek();
@@ -318,7 +318,39 @@ export function parse(tokens: Token[]) : Program {
             return parseExpressionStatement();
         }
     }
-        return { kind: "Program", body: [] };
 
+       function parseWhile() {
+        let current = peek();
+        let cond: Expr;
+
+        if (current?.value === "while" && current.type === "KEYWORD"){
+            advance();
+            current = peek();
+            if (current?.type === "PUNCTUATION" && current.value === "(" ){
+                advance();
+                cond = parseExpression();
+                current = peek();
+                if (current?.type === "PUNCTUATION" && current.value === ")"){
+                    advance();
+                } else {
+                    throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ')'`);
+                }
+            } else {
+                    throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('`);
+                }
+
+            const body = parseBlock();
+            return {
+                kind: "WhileStatement" as const,
+                condition: cond,
+                body: body
+            } 
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of 'while'`);
+        }
+    }
+    
+    return { kind: "Program", body: [] };
 }
+
 
