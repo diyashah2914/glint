@@ -312,8 +312,12 @@ export function parse(tokens: Token[]) : Program {
             return parseLetStatement();
         } else if (current?.type === "KEYWORD" && current?.value === "return"){
             return parseReturn();
-        } 
-            // yet to add else if blocks for if, while, function decl, etc.'
+        } else if (current?.type === "KEYWORD" && current?.value === "while"){
+            return parseWhile();
+        } else if (current?.type === "KEYWORD" && current?.value === "if"){
+            return parseIfStatement();
+        }      
+            // yet to add else if blocks for function decl, etc.'
         else {
             return parseExpressionStatement();
         }
@@ -350,6 +354,50 @@ export function parse(tokens: Token[]) : Program {
         }
     }
     
+    function parseIfStatement(){
+        let current = peek();
+        let ifCond : Expr;
+        let ifBody: Statement[];
+        let elseBody: Statement[] | null = null;
+        if (current?.type === "KEYWORD" && current.value === "if"){
+            advance();
+            current = peek();
+        
+            if (current?.type === "PUNCTUATION" && current.value === "("){
+                advance();
+                ifCond = parseExpression();
+                current = peek();
+
+                if (current?.type === "PUNCTUATION" && current.value === ")"){
+                    advance();
+                } else {
+                    throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ')'`);
+                }
+            } else {
+                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('`);
+            }
+
+                ifBody = parseBlock();
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of 'if'`);
+        }
+
+        current = peek();
+        
+        if (current?.type === "KEYWORD" && current.value === "else"){
+            advance();
+            current = peek();
+
+            elseBody = parseBlock();
+        }
+
+        return {
+            kind: "IfStatement" as const,
+            condition: ifCond,
+            thenBranch: ifBody,
+            elseBranch: elseBody
+        }
+    } 
     return { kind: "Program", body: [] };
 }
 
