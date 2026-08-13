@@ -465,7 +465,18 @@ export function parse(tokens: Token[]) : Program {
             throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of 'function'`);
         }
     }
-    return { kind: "Program", body: [] };
+
+    const statements: Statement[] = [];
+    let current = peek();
+    while (current?.type !== "EOF"){
+        const stmt = parseStatement();
+        statements.push(stmt);
+        current = peek();
+    }
+        return {
+            kind: "Program" as const,
+            body: statements
+        }
 }
 
 
