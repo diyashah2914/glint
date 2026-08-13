@@ -316,9 +316,9 @@ export function parse(tokens: Token[]) : Program {
             return parseWhile();
         } else if (current?.type === "KEYWORD" && current?.value === "if"){
             return parseIfStatement();
-        }      
-            // yet to add else if blocks for function decl, etc.'
-        else {
+        } else if (current?.type === "KEYWORD" && current?.value === "function"){
+            return parseFunctionDecl();
+        } else {
             return parseExpressionStatement();
         }
     }
