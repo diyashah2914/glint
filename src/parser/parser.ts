@@ -323,7 +323,7 @@ export function parse(tokens: Token[]) : Program {
         }
     }
 
-       function parseWhile() {
+    function parseWhile() {
         let current = peek();
         let cond: Expr;
 
@@ -398,6 +398,73 @@ export function parse(tokens: Token[]) : Program {
             elseBranch: elseBody
         }
     } 
+
+    function parseFunctionDecl(){
+        let params: {name: string, type: string}[] = [];
+        let current = peek();
+        if (current?.type === "KEYWORD" && current.value === "function"){
+            advance();
+            const funcName = peek();
+            advance();
+            current = peek();
+
+            if (current?.type === "PUNCTUATION" && current.value === "("){
+                advance();
+                current = peek();
+
+                while (current?.value !== ")"){
+                    const paramNametoken = expect("IDENTIFIER");
+                    const paramName = paramNametoken?.value ?? "";
+                    current = peek();
+
+                    if (current?.value === ":"){
+                        advance();
+                        const paramTypeToken = expect("KEYWORD");
+                        const paramType = paramTypeToken?.value ?? "";
+
+                        params.push({name: paramName, type: paramType});
+                    } else {
+                        throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ':'`);
+                    }
+                    current = peek();
+                    if (current?.value === ","){
+                        advance();
+                        current = peek();
+                    } else {
+                        break;
+                    }
+                }   
+
+                if (current?.type === "PUNCTUATION" && current.value === ")"){
+                    advance();
+                    current = peek();
+
+                    if (current?.value === ":"){
+                        advance();
+                        const returnTypeToken = expect("KEYWORD");
+                        const returnType = returnTypeToken?.value ?? "";
+                        const body = parseBlock();
+                        return {
+                            kind: "FunctionDecl" as const,
+                            funcName: funcName?.value ?? "",
+                            params: params,
+                            returnType: returnType,
+                            body: body
+                        }
+
+                    } else {
+                        throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ':'`);
+                    }
+                } else {
+                    throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of ')'`);
+                } 
+            } else {
+                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('`);
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of 'function'`);
+        }
+    }
     return { kind: "Program", body: [] };
 }
 
