@@ -25,7 +25,7 @@ export function tokenize(input: string) : Token[] {
     let line = 1
     let col = 1
 
-    const punctuationSet = new Set<string>(['(', ')', '{', '}', ',' , ';']);
+    const punctuationSet = new Set<string>(['(', ')', '{', '}', ',' , ';', ':']);
     const operatorSet = new Set<string>(['+', '-', '*', '/']);
     const digitRegex : RegExp = /\d/;
     const alphabetRegex : RegExp = /[A-Za-z]/;
@@ -202,5 +202,5 @@ export function tokenize(input: string) : Token[] {
 
     const newToken = new Token("EOF", null, line, col )
     out.push(newToken);
-    return out
+    return out;
 }

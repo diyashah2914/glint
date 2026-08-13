@@ -148,10 +148,27 @@ export function parse(tokens: Token[]) : Program {
         }
     }
 
-    function parseExpression() :Expr{
-        const leftNode = parseLiteral();
+    function parseExpression() : Expr{
+
+        let current = peek();
+        let leftNode: Expr = {kind: "Identifier", name: ""};
+
+        if (current?.type === "PUNCTUATION" && current?.value === "("){
+            return parseParenthesized();
+        }  else if (current?.type === "NUMBER" || current?.type === "STRING" || current?.type === "BOOLEAN" || current?.type === "IDENTIFIER"){
+            leftNode = parseLiteral();
         
-        const current = peek();
+            current = peek();
+
+            if (current?.value === "("  && leftNode.kind === "Identifier"){
+                const callNode = parseCall(leftNode.name);
+                return callNode;
+            }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '(' or literal `)
+        }
+        
+        current = peek();
         if (current?.type === "OPERATOR" || current?.type === "COMPARISON"){
             const operatorToken = advance();
             const rightNode = parseExpression(); 
@@ -166,44 +183,40 @@ export function parse(tokens: Token[]) : Program {
         return leftNode;
     }
 
-    function parseCall() {
+    function parseCall(funcName: string): CallExpr {
+
         let current = peek();
 
-        if (current?.type === "IDENTIFIER"){
-            const funcName = advance()?.value;
+        
+        if (current?.type === "PUNCTUATION" && current?.value === "("){
+            advance();
             current = peek();
-            if (current?.type === "PUNCTUATION" && current?.value === "("){
-                advance();
+
+            const args: Expr[] = [];
+
+            while (current?.value !== ")") {
+                args.push(parseExpression());
+
                 current = peek();
 
-                const args: Expr[] = [];
-
-                while (current?.value !== ")") {
-                    args.push(parseExpression());
-
+                if (current?.value === ","){
+                    advance();
                     current = peek();
-
-                    if (current?.value === ","){
-                        advance();
-                        current = peek();
-                    }
                 }
-
-                advance();
-                return { 
-                    kind : "CallExpr",
-                    name: funcName,
-                    args: args
-                }
-            
-            } else {
-                throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('  `)
             }
-        } else {
-            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of identifier.`)
-        }
+
+            advance();
+            return { 
+                kind : "CallExpr" as const,
+                name: funcName,
+                args: args
+            }
         
-    }
+        } else {
+            throw new Error(`Unexpected character '${current?.value}' at line ${current?.line}, column ${current?.col} instead of '('  `)
+        }
+    
+}
 
     function parseExpressionStatement(){
         const expr = parseExpression();
